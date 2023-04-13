@@ -7,5 +7,6 @@ Funktionen:
   - Lenkung links/rechts
   - Licht
   - Steuerbar
-  
+
+Wokwi Diagramm: https://wokwi.com/projects/361870353311948801
   
