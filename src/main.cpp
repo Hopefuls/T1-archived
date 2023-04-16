@@ -1,25 +1,31 @@
 #include <Arduino.h>
+#include <Servo.h>
+#include "controllers/connection/RemoteCommunicator.h"
+#include "BluetoothSerial.h"
 
-int HEADLIGHT_LEFT_PIN = 18;
-int HEADLIGHT_RIGHT_PIN = 19;
-int BRAKE_LIGHT_LEFT_PIN = 17;
-int BRAKE_LIGHT_RIGHT_PIN = 16;
+#define BT_TRANSFER_LED 32
+#define BT_WAIT_LED 33
+#define HEADLIGHT_LEFT_PIN 19
+#define HEADLIGHT_RIGHT_PIN 18
+#define BACKLIGHT_LEFT_PIN 17
+#define BACKLIGHT_RIGHT_PIN 16
 
-void setup() {
-  pinMode(HEADLIGHT_LEFT_PIN, OUTPUT);
-  pinMode(HEADLIGHT_RIGHT_PIN, OUTPUT);
-  pinMode(BRAKE_LIGHT_LEFT_PIN, OUTPUT);
-  pinMode(BRAKE_LIGHT_RIGHT_PIN, OUTPUT);
+Servo servo;
+int pos = 0;
+
+void setup()
+{
+    Serial.begin(9600);
+    RemoteCommunicator *remoteCommunicator = new RemoteCommunicator("T1 BUS CONTROLLER", 9600);
+    remoteCommunicator->connect();
+    pinMode(BT_WAIT_LED, OUTPUT);
+    pinMode(BT_TRANSFER_LED, OUTPUT);
+    pinMode(HEADLIGHT_LEFT_PIN, OUTPUT);
+    pinMode(HEADLIGHT_RIGHT_PIN, OUTPUT);
+    pinMode(BACKLIGHT_LEFT_PIN, OUTPUT);
+    pinMode(BACKLIGHT_RIGHT_PIN, OUTPUT);
 }
 
-void loop() {
-  digitalWrite(HEADLIGHT_LEFT_PIN, HIGH);
-  digitalWrite(HEADLIGHT_RIGHT_PIN, HIGH);
-  digitalWrite(BRAKE_LIGHT_LEFT_PIN, HIGH);
-  digitalWrite(BRAKE_LIGHT_RIGHT_PIN, HIGH);
-  delay(1000);
-  digitalWrite(HEADLIGHT_LEFT_PIN, LOW);
-  delay(500);
-  digitalWrite(HEADLIGHT_RIGHT_PIN, LOW);
-  delay(500);
+void loop()
+{
 }
