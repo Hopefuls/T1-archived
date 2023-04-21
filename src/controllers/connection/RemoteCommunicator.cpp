@@ -12,6 +12,8 @@
 #define HEADLIGHT_RIGHT_PIN 18
 #define BACKLIGHT_LEFT_PIN 17
 #define BACKLIGHT_RIGHT_PIN 16
+#define MOTOR1_PIN1 26
+#define MOTOR1_PIN2 25
 
 BluetoothSerial serialConnection;
 bool isConnectionEstablished = false;
@@ -88,7 +90,16 @@ void listen(void *pvParameters)
                             digitalWrite(HEADLIGHT_RIGHT_PIN, LOW);
                             digitalWrite(BACKLIGHT_LEFT_PIN, LOW);
                             digitalWrite(BACKLIGHT_RIGHT_PIN, LOW);
-                        }
+                        } else if (data == "MOTOR1_FORWARD") {
+                            digitalWrite(MOTOR1_PIN1, HIGH);
+                            digitalWrite(MOTOR1_PIN2, LOW);
+                        } else if (data == "MOTOR1_BACKWARD") {
+                            digitalWrite(MOTOR1_PIN1, LOW);
+                            digitalWrite(MOTOR1_PIN2, HIGH);
+                        } else if (data == "MOTOR1_STOP") {
+                            digitalWrite(MOTOR1_PIN1, LOW);
+                            digitalWrite(MOTOR1_PIN2, LOW);
+                        } // check if data starts with "INPUT_"
                     }
                     else
                     {
