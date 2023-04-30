@@ -23,3 +23,4 @@ Oberflächliches Pinout für den ESP32:
 - Simple Battery Pack
 - 12V to nth Volt Stepdown Converter
 - 12V Batteries
+- Servo

@@ -3,6 +3,7 @@
 #include <tuple>
 #include "T1RemoteCommunicator.h"
 #include "../driving/T1MotorController.h"
+#include "../steering/T1SteeringController.h"
 #include <Arduino.h>
 #include <BluetoothSerial.h>
 
@@ -52,8 +53,20 @@ void handle_serial_input(String input)
 
     if (input == "MOTOR1_STOP")
     {
-        T1MotorController::getInstance().motor_controller_drive(2);
+        T1MotorController::getInstance().motor_controller_stop();
         Serial.println(CONTROLLER_LOG_PREFIX + "Stopping");
+        return;
+    }
+    if (input == "STEER_LEFT")
+    {
+        Serial.println(CONTROLLER_LOG_PREFIX + "Steering left");
+        T1SteeringController::getInstance().steering_controller_turn(1);
+        return;
+    }
+    if (input == "STEER_RIGHT")
+    {
+        Serial.println(CONTROLLER_LOG_PREFIX + "Steering right");
+        T1SteeringController::getInstance().steering_controller_turn(2);
         return;
     }
 }

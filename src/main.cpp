@@ -4,6 +4,7 @@
 #include "controllers/distancing/T1DistanceController.h"
 #include "controllers/driving/T1MotorController.h"
 #include "controllers/light/T1LightController.h"
+#include "controllers/steering/T1SteeringController.h"
 
 #define BT_TRANSFER_LED 32
 #define BT_WAIT_LED 33
@@ -43,16 +44,17 @@ void setup()
     distance_controller_instance.distance_controller_setup();
 
     T1MotorController &motor_controller_instance = T1MotorController::getInstance();
+    motor_controller_instance.setMotorPin1(MOTOR1_PIN1);
+    motor_controller_instance.setMotorPin2(MOTOR1_PIN2);
     motor_controller_instance.motor_controller_setup();
 
     T1LightController &light_controller_instance = T1LightController::getInstance();
 
-    // motorController->drive(1);
-    pinMode(MOTOR1_PIN1, OUTPUT);
-    pinMode(MOTOR1_PIN2, OUTPUT);
-    digitalWrite(MOTOR1_PIN1, HIGH);
-    digitalWrite(MOTOR1_PIN2, LOW);
+    T1SteeringController &steering_controller_instance = T1SteeringController::getInstance();
+    steering_controller_instance.setSteeringPin(16);
 
+    steering_controller_instance.steering_controller_setup();
+    steering_controller_instance.steering_controller_turn_degree(90);
     // pinMode(BT_WAIT_LED, OUTPUT);
     // pinMode(BT_TRANSFER_LED, OUTPUT);
     // pinMode(HEADLIGHT_LEFT_PIN, OUTPUT);
