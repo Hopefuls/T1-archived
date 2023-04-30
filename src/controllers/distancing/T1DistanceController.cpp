@@ -5,12 +5,19 @@ using namespace std;
 
 String DC_LOG_PREFIX = "[DISTANCECONTROLLER] ";
 
+/*
+ * Function that gets called when measured distance is larger than the minimum distance and smaller than the maximum distance
+ * Use this as an entrypoint to make actions towards the schallsensor if a certain distance is met (e.g. drive backwards)
+ */
 void T1DistanceController::on_measured_distance(int distance_in_cm)
 {
     Serial.println(DC_LOG_PREFIX + "Measured distance: " + String(distance_in_cm) + "cm");
 }
 
-// create a loop function
+/*
+ * Loop function responsible for keeping track of the distance, runs repeatedly every trigger_rate / portTICK_PERIOD_MS
+ * @author Aurel Ballin
+ */
 void T1DistanceController::measure_distance_loop()
 {
     digitalWrite(this->trig_pin, LOW);
@@ -26,6 +33,11 @@ void T1DistanceController::measure_distance_loop()
     }
 }
 
+/*
+ * Loop task responsible for executing the measure_distance_loop function repeatedly
+ * @param pvParameters: void pointer to the parameters passed to the task, can be ignored
+ * @author Aurel Ballin
+ */
 void measure_distance_loop_task(void *pvParameters)
 {
     for (;;)
@@ -35,7 +47,10 @@ void measure_distance_loop_task(void *pvParameters)
     }
 }
 
-// create a setup function
+/*
+ * Setup function for the distance controller, sets up the pins and starts the measure_distance_loop_task from xTaskCreatePinnedToCore
+ * @author Aurel Ballin
+ */
 void T1DistanceController::distance_controller_setup()
 {
     pinMode(this->echo_pin, INPUT);
