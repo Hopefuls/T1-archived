@@ -15,10 +15,14 @@ using namespace std;
 
 String RC_LOG_PREFIX = "[REMOTECOMMUNICATOR] ";
 
+/*
+ * handles the serial input
+ * @param input: the input from the serial connection
+ * @see handle_serial_parsing
+ */
 void handle_serial_input(String input)
 {
     String CONTROLLER_LOG_PREFIX = "[CONTROLLER] ";
-    // create a switch case for each command
 
     if (input == "CONTROL_LED_ON")
     {
@@ -34,14 +38,12 @@ void handle_serial_input(String input)
 
     if (input == "MOTOR1_FORWARD")
     {
-        // get the instance from the motor controller
         T1MotorController::getInstance().motor_controller_drive(2);
         Serial.println(CONTROLLER_LOG_PREFIX + "Driving forward");
         return;
     }
     if (input == "MOTOR1_BACKWARD")
     {
-        // get the instance from the motor controller
 
         T1MotorController::getInstance().motor_controller_drive(2);
         Serial.println(CONTROLLER_LOG_PREFIX + "Driving backward");
@@ -50,16 +52,19 @@ void handle_serial_input(String input)
 
     if (input == "MOTOR1_STOP")
     {
-        // get the instance from the motor controller
         T1MotorController::getInstance().motor_controller_drive(2);
         Serial.println(CONTROLLER_LOG_PREFIX + "Stopping");
         return;
     }
 }
 
+/*
+ * handles the serial parsing received from the bluetooth connection
+ * @see listen
+ * @author Aurel Ballin
+ */
 void handle_serial_parsing()
 {
-    // check if serial data is available
     if (serialConnection.available())
     {
         Serial.println(RC_LOG_PREFIX + "Serial data available!");
@@ -93,6 +98,10 @@ void handle_serial_parsing()
     }
 }
 
+/*
+ * listens for incoming bluetooth connections, this is run in a separate task
+ * @param pvParameters: the parameters for the task, not used
+ */
 void listen(void *pvParameters)
 {
     for (;;)
@@ -149,6 +158,9 @@ void listen(void *pvParameters)
 }
 
 // https://www.tutorialspoint.com/esp32_for_iot/esp32_for_iot_setting_up_rtos_for_dual_core_and_multi_threaded_operation.htm
+/*
+ * connects to the bluetooth device and starts the listen task
+ */
 void T1RemoteCommunicator::remote_communicator_connect()
 {
     TaskHandle_t xHandle = NULL;

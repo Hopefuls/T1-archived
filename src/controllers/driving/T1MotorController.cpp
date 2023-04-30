@@ -4,6 +4,11 @@
 /*
  * Setup the motor controller pins using the motor_pin1 and motor_pin2 variables
  */
+
+using namespace std;
+
+String MC_LOG_PREFIX = "[MOTORCONTROLLER] ";
+
 void T1MotorController::motor_controller_setup()
 {
     pinMode(this->motor_pin1, OUTPUT);

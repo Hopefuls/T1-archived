@@ -68,6 +68,9 @@ public:
      * Setter for the trigger rate of the HC-SR04
      * This is used to determine how often the distance should be measured in ms
      * E.g. if trigger_rate is 1000, the distance will be measured every second
+     *
+     * @note Keep in mind that this is affected by how long the HC-SR04 takes to measure a distance and only
+     * triggers said delay after the measurement is done
      * @param trigger_rate the trigger rate in ms
      * @return void
      */
