@@ -1,0 +1,54 @@
+#include "T1DistanceController.h"
+#include <Arduino.h>
+
+using namespace std;
+
+String DC_LOG_PREFIX = "[DISTANCECONTROLLER] ";
+
+void T1DistanceController::on_measured_distance(int distance_in_cm)
+{
+    Serial.println(DC_LOG_PREFIX + "Measured distance: " + String(distance_in_cm) + "cm");
+}
+
+// create a loop function
+void T1DistanceController::measure_distance_loop()
+{
+    digitalWrite(this->trig_pin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(this->trig_pin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(this->trig_pin, LOW);
+    long duration = pulseIn(this->echo_pin, HIGH);
+    long distance_in_cm = duration * 0.034 / 2;
+    if (distance_in_cm >= this->min_distance && distance_in_cm <= this->max_distance)
+    {
+        this->on_measured_distance(distance_in_cm);
+    }
+}
+
+void measure_distance_loop_task(void *pvParameters)
+{
+    for (;;)
+    {
+        T1DistanceController::getInstance().measure_distance_loop();
+        vTaskDelay(T1DistanceController::getInstance().trigger_rate / portTICK_PERIOD_MS);
+    }
+}
+
+// create a setup function
+void T1DistanceController::distance_controller_setup()
+{
+    pinMode(this->echo_pin, INPUT);
+    pinMode(this->trig_pin, OUTPUT);
+    TaskHandle_t xHandle = NULL;
+    Serial.println(DC_LOG_PREFIX + "Starting distance controller");
+    // create a task, pass the reference to the task handle
+    xTaskCreatePinnedToCore(
+        measure_distance_loop_task,   /* Function to implement the task */
+        "measure_distance_loop_task", /* Name of the task */
+        10000,                        /* Stack size in words */
+        NULL,                         /* Task input parameter */
+        0,                            /* Priority of the task */
+        &xHandle,                     /* Task handle. */
+        1);                           /* Core where the task should run */
+}
