@@ -14,6 +14,33 @@ BluetoothSerial serialConnection;
 
 using namespace std;
 
+enum Action
+{
+    NOOP_INVALID,
+    CONTROL_TOGGLE_LIGHT,
+    CONTROL_INDICATOR_LEFT,
+    CONTROL_INDICATOR_RIGHT,
+    CONTROL_FLASHING_LIGHT,
+    MOTOR1_FORWARD,
+    MOTOR1_BACKWARD,
+    MOTOR1_STOP,
+    STEER_LEFT,
+    STEER_RIGHT
+};
+
+std::map<int, Action> actionMap = {
+    {0b0000, NOOP_INVALID},
+    {0b0001, CONTROL_TOGGLE_LIGHT},
+    {0b0010, CONTROL_INDICATOR_LEFT},
+    {0b0011, CONTROL_INDICATOR_RIGHT},
+    {0b0100, CONTROL_FLASHING_LIGHT},
+    {0b0101, MOTOR1_FORWARD},
+    {0b0110, MOTOR1_BACKWARD},
+    {0b0111, MOTOR1_STOP},
+    {0b1000, STEER_LEFT},
+    {0b1001, STEER_RIGHT}};
+
+//
 String RC_LOG_PREFIX = "[REMOTECOMMUNICATOR] ";
 
 /*
@@ -21,29 +48,35 @@ String RC_LOG_PREFIX = "[REMOTECOMMUNICATOR] ";
  * @param input: the input from the serial connection
  * @see handle_serial_parsing
  */
-void handle_serial_input(String input)
+void handle_serial_input(Action input)
 {
     String CONTROLLER_LOG_PREFIX = "[CONTROLLER] ";
 
-    if (input == "CONTROL_LED_ON")
+    if (input == CONTROL_INDICATOR_LEFT) // to be changed
     {
-        Serial.println(CONTROLLER_LOG_PREFIX + "Turning LED on");
+        Serial.println(CONTROLLER_LOG_PREFIX + "not implemented CONTROL_INDICATOR_LEFT");
         return;
     }
 
-    if (input == "CONTROL_LED_OFF")
+    if (input == CONTROL_INDICATOR_RIGHT) // to be changed
     {
-        Serial.println(CONTROLLER_LOG_PREFIX + "Turning LED off");
+        Serial.println(CONTROLLER_LOG_PREFIX + "not implemented CONTROL_INDICATOR_RIGHT");
         return;
     }
 
-    if (input == "MOTOR1_FORWARD")
+    if (input == CONTROL_FLASHING_LIGHT) // to be changed
     {
-        T1MotorController::getInstance().motor_controller_drive(2);
+        Serial.println(CONTROLLER_LOG_PREFIX + "Turning LED off CONTROL_FLASHING_LIGHT");
+        return;
+    }
+
+    if (input == MOTOR1_FORWARD)
+    {
+        T1MotorController::getInstance().motor_controller_drive(1);
         Serial.println(CONTROLLER_LOG_PREFIX + "Driving forward");
         return;
     }
-    if (input == "MOTOR1_BACKWARD")
+    if (input == MOTOR1_BACKWARD)
     {
 
         T1MotorController::getInstance().motor_controller_drive(2);
@@ -51,24 +84,38 @@ void handle_serial_input(String input)
         return;
     }
 
-    if (input == "MOTOR1_STOP")
+    if (input == MOTOR1_STOP)
     {
         T1MotorController::getInstance().motor_controller_stop();
         Serial.println(CONTROLLER_LOG_PREFIX + "Stopping");
         return;
     }
-    if (input == "STEER_LEFT")
+    if (input == STEER_LEFT)
     {
         Serial.println(CONTROLLER_LOG_PREFIX + "Steering left");
         T1SteeringController::getInstance().steering_controller_turn(1);
         return;
     }
-    if (input == "STEER_RIGHT")
+    if (input == STEER_RIGHT)
     {
         Serial.println(CONTROLLER_LOG_PREFIX + "Steering right");
         T1SteeringController::getInstance().steering_controller_turn(2);
         return;
     }
+}
+
+int decimal_to_4bit_binary(int decimal_number)
+{
+    int binary_number = 0;
+    int bit_position = 0;
+    while (decimal_number > 0 && bit_position < 4)
+    {
+        int bit_value = decimal_number % 2;
+        binary_number += bit_value << bit_position;
+        decimal_number /= 2;
+        bit_position++;
+    }
+    return binary_number;
 }
 
 /*
@@ -78,36 +125,14 @@ void handle_serial_input(String input)
  */
 void handle_serial_parsing()
 {
-    if (serialConnection.available())
+    while (serialConnection.available())
     {
-        Serial.println(RC_LOG_PREFIX + "Serial data available!");
-        digitalWrite(BT_TRANSFER_LED, HIGH);
-        // loop through each character, ensure it starts with < and ends with >
-        // if it does, add it to the buffer
-        // create a buffer variable
-        String buffer = "";
-        bool receiving = false;
-        while (serialConnection.available())
-        {
-            char c = serialConnection.read();
-            digitalWrite(BT_TRANSFER_LED, digitalRead(BT_TRANSFER_LED) == HIGH ? LOW : HIGH);
-            if (c == '>')
-            {
-                receiving = false;
-                Serial.println(RC_LOG_PREFIX + "Received: " + buffer);
-                handle_serial_input(buffer);
-                digitalWrite(BT_TRANSFER_LED, LOW);
-            }
-            if (receiving)
-            {
-                buffer += c;
-            }
-            if (c == '<')
-            {
-                receiving = true;
-                buffer = "";
-            }
-        }
+        char input = serialConnection.read();
+        Serial.println(RC_LOG_PREFIX + "Received input: " + input);
+        input = decimal_to_4bit_binary(input);
+        Action action = actionMap[input];
+        Serial.println(RC_LOG_PREFIX + "Action: " + action);
+        handle_serial_input(action);
     }
 }
 
