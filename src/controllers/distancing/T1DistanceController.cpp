@@ -9,12 +9,12 @@ String DC_LOG_PREFIX = "[DISTANCECONTROLLER] ";
  * Function that gets called when measured distance is larger than the minimum distance and smaller than the maximum distance
  * Use this as an entrypoint to make actions towards the schallsensor if a certain distance is met (e.g. drive backwards)
  */
-if  (T1DistanceController &distance_controller_instance = T1DistanceController::getInstance()){ 
-    void T1DistanceController::on_measured_distance(int distance_in_cm){
-        Serial.println(DC_LOG_PREFIX + "Measured distance: " + String(distance_in_cm) + "cm");
-        Print "Der Bus stoppt jetzt";
-    }
+#if  (T1DistanceController &distance_controller_instance = T1DistanceController::getInstance()){ 
+void T1DistanceController::on_measured_distance(int distance_in_cm){
+     Serial.println(DC_LOG_PREFIX + "Measured distance: " + String(distance_in_cm) + "cm");
+     Serial.println "Der Bus stoppt jetzt";
 }
+#}
 
 
 /*
