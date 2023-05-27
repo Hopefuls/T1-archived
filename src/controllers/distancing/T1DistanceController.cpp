@@ -12,6 +12,7 @@ String DC_LOG_PREFIX = "[DISTANCECONTROLLER] ";
 if  (T1DistanceController &distance_controller_instance = T1DistanceController::getInstance()){ 
     void T1DistanceController::on_measured_distance(int distance_in_cm){
         Serial.println(DC_LOG_PREFIX + "Measured distance: " + String(distance_in_cm) + "cm");
+        Print "Der Bus stoppt jetzt";
     }
 }
 
