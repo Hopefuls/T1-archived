@@ -24,6 +24,11 @@ public:
         this->btname = btname;
     }
 
+    void setStatusLights(int status, int transfer) {
+        this->status_pin = status;
+        this->transfer_pin = transfer;
+    }
+
     /*
      * Setter for the bluetooth baudrate, this should be the same as the baudrate of the bluetooth module
      */
@@ -33,6 +38,8 @@ public:
     }
     String btname;
     int baudrate;
+    int status_pin;
+    int transfer_pin;
     void remote_communicator_connect();
     bool rc_is_connected = false;
     bool rc_bluetooth_is_setup = false;

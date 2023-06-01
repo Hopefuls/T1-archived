@@ -13,16 +13,7 @@ String DC_LOG_PREFIX = "[DISTANCECONTROLLER] ";
 void T1DistanceController::on_measured_distance(int distance_in_cm)
 {
 
-    switch (Serial.println(DC_LOG_PREFIX + "Measured distance: " + String(distance_in_cm) + "cm"))
-    {
-    case (distance_in_cm < 5):
-        Serial.println("Ich setze die Motorgeschwindigkeit auf stopp und fahre Rückwärts");
-    case (distance_in_cm < 10):
-        Serial.println("Ich verringe die Geschwindigkeit");
 
-    default:
-        Serial.println("Ich fahre normal weiter");
-    }
 }
 
 /*

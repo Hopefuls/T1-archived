@@ -13,7 +13,7 @@ void T1SteeringController::steering_controller_setup()
 
 /*
  * Causes the steering to turn in a given direction
- * @param direction: 1 = left, 2 = right, 3 = center
+ * @param direction: 1 = right, 2 = left, 3 = center
  * Might be changed to enums in the future
  */
 void T1SteeringController::steering_controller_turn(int direction)
@@ -24,10 +24,10 @@ void T1SteeringController::steering_controller_turn(int direction)
         this->servo.write(0);
         break;
     case 2:
-        this->servo.write(180);
+        this->servo.write(60);
         break;
     case 3:
-        this->servo.write(90);
+        this->servo.write(30);
         break;
     }
 }

@@ -6,8 +6,8 @@
 #include "controllers/light/T1LightController.h"
 #include "controllers/steering/T1SteeringController.h"
 
-#define BT_TRANSFER_LED 32
-#define BT_WAIT_LED 33
+#define BT_TRANSFER_LED 13
+#define BT_WAIT_LED 12
 #define HEADLIGHT_LEFT_PIN 19
 #define HEADLIGHT_RIGHT_PIN 18
 #define BACKLIGHT_LEFT_PIN 17
@@ -32,6 +32,7 @@ void setup()
     T1RemoteCommunicator &remote_communicator_instance = T1RemoteCommunicator::getInstance();
     remote_communicator_instance.setBtName("T1 BUS CONTROLLER");
     remote_communicator_instance.setBaudrate(9600);
+    remote_communicator_instance.setStatusLights(BT_WAIT_LED, BT_TRANSFER_LED);
     remote_communicator_instance.remote_communicator_connect();
 
     T1DistanceController &distance_controller_instance = T1DistanceController::getInstance();
@@ -54,7 +55,7 @@ void setup()
     steering_controller_instance.setSteeringPin(16);
 
     steering_controller_instance.steering_controller_setup();
-    steering_controller_instance.steering_controller_turn_degree(90);
+    steering_controller_instance.steering_controller_turn_degree(30);
     // pinMode(BT_WAIT_LED, OUTPUT);
     // pinMode(BT_TRANSFER_LED, OUTPUT);
     // pinMode(HEADLIGHT_LEFT_PIN, OUTPUT);

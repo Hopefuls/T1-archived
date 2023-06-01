@@ -7,9 +7,6 @@
 #include <Arduino.h>
 #include <BluetoothSerial.h>
 
-#define BT_TRANSFER_LED 32
-#define BT_WAIT_LED 33
-
 BluetoothSerial serialConnection;
 
 using namespace std;
@@ -158,14 +155,14 @@ void listen(void *pvParameters)
         {
             Serial.println(RC_LOG_PREFIX + "Waiting for Bluetooth connection...");
             // check the BT_WAIT_LED state
-            digitalWrite(BT_WAIT_LED, digitalRead(BT_WAIT_LED) == HIGH ? LOW : HIGH);
+            digitalWrite(T1RemoteCommunicator::getInstance().status_pin, digitalRead(T1RemoteCommunicator::getInstance().status_pin) == HIGH ? LOW : HIGH);
 
             // digitalWrite(BT_WAIT_LED, HIGH);
             // digitalWrite(BT_TRANSFER_LED, LOW);
             if (serialConnection.hasClient())
             {
                 Serial.println(RC_LOG_PREFIX + "Client connected!");
-                digitalWrite(BT_WAIT_LED, HIGH);
+                digitalWrite(T1RemoteCommunicator::getInstance().status_pin, HIGH);
 
                 T1RemoteCommunicator::getInstance().rc_is_connected = true;
             }
